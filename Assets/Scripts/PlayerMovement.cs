@@ -21,6 +21,9 @@ public class PlayerMovement : MonoBehaviour
     public LayerMask whatIsGround;
     bool grounded;
 
+    [Header("Animation")]
+    Animator animator;
+
 
     public Transform orientation;
 
@@ -34,6 +37,8 @@ public class PlayerMovement : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         rb.freezeRotation = true;
+
+        animator = GetComponent<Animator>();
     }
 
 
@@ -67,11 +72,16 @@ public class PlayerMovement : MonoBehaviour
     {
         moveDirection = orientation.forward * verticalInput + orientation.right * horizontalInput;
 
-        if (grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        animator.SetFloat("forward",verticalInput);
 
-        else if (!grounded)
-            rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+        //if (grounded)
+        //    rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+
+        //else if (!grounded)
+        //    rb.AddForce(moveDirection.normalized * moveSpeed * 10f, ForceMode.Force);
+
+        float forceMultiplier = grounded ? 10f : 5f; // Reduce force when airborne for better control
+        rb.AddForce(moveDirection.normalized * moveSpeed * forceMultiplier, ForceMode.Force);
     }
 
     private void SpeedControl()
