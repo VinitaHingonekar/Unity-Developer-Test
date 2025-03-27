@@ -5,6 +5,7 @@ using UnityEngine;
 public class CharacterMovement : MonoBehaviour
 {
     public Rigidbody rb;
+    public Animator animator;
     public Transform cam;
 
     public float moveSpeed = 5f;
@@ -43,6 +44,7 @@ public class CharacterMovement : MonoBehaviour
 
         if (direction.magnitude >= 0.1f)
         {
+            animator.SetBool("isRunning", true);
 
             float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
             Quaternion targetRotation = Quaternion.Euler(0f, targetAngle, 0f);
@@ -61,6 +63,7 @@ public class CharacterMovement : MonoBehaviour
         }
         else
         {
+            animator.SetBool("isRunning", false);
             rb.velocity = new Vector3(0, rb.velocity.y, 0);
         }
 
