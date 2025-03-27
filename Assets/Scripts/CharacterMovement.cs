@@ -13,6 +13,7 @@ public class CharacterMovement : MonoBehaviour
     public LayerMask groundLayer;
 
     private bool isGrounded;
+    private Vector3 gravityDirection = Vector3.down;
 
     public float jumpForce = 7f;
     public float jumpCooldown;
@@ -40,20 +41,28 @@ public class CharacterMovement : MonoBehaviour
         float horizontalInput = Input.GetAxisRaw("Horizontal");
         float verticalInput = Input.GetAxisRaw("Vertical");
 
-        Vector3 direction = new Vector3(horizontalInput, 0f, verticalInput).normalized;
+        if (Mathf.Abs(horizontalInput) > 0 && Mathf.Abs(verticalInput) > 0)
+        {
+            if (Mathf.Abs(horizontalInput) > Mathf.Abs(verticalInput))
+                verticalInput = 0; // Prioritize horizontal movement
+            else
+                horizontalInput = 0; // Prioritize vertical movement
+        }
+
+        Vector3 direction = new Vector3(-horizontalInput, 0f, -verticalInput).normalized;
 
         if (direction.magnitude >= 0.1f)
         {
             animator.SetBool("isRunning", true);
 
-            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg + cam.eulerAngles.y;
+            float targetAngle = Mathf.Atan2(direction.x, direction.z) * Mathf.Rad2Deg;
             Quaternion targetRotation = Quaternion.Euler(0f, targetAngle, 0f);
 
             // Checking if theres a wall in front
             Vector3 moveDirection = targetRotation * Vector3.forward;
             if (!Physics.Raycast(transform.position, moveDirection, 0.6f, groundLayer))
             {
-                transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
+                //    transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * turnSpeed);
                 rb.velocity = new Vector3(moveDirection.x * moveSpeed, rb.velocity.y, moveDirection.z * moveSpeed);
             }
             else
@@ -75,6 +84,8 @@ public class CharacterMovement : MonoBehaviour
         }
     }
 
+
+
     private void CheckGround()
     {
         isGrounded = Physics.Raycast(transform.position, Vector3.down, 1.1f, groundLayer);
@@ -90,5 +101,10 @@ public class CharacterMovement : MonoBehaviour
     private void ResetJump()
     {
         readyToJump = true;
+    }
+
+    public void SetGravity(Vector3 newGravity)
+    {
+        gravityDirection = newGravity.normalized;
     }
 }

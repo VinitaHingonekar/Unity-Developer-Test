@@ -33,6 +33,8 @@ public class PlayerMovement : MonoBehaviour
     Vector3 moveDirection;
     Rigidbody rb;
 
+    Vector3 gravityDirection;
+
     void Start()
     {
         rb = GetComponent<Rigidbody>();
@@ -106,4 +108,9 @@ public class PlayerMovement : MonoBehaviour
     {
         readyToJump = true;
     }
+    public void SetGravity(Vector3 newGravity)
+    {
+        gravityDirection = newGravity.normalized;
+    }
+
 }
