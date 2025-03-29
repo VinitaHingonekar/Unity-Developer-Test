@@ -1,45 +1,295 @@
-using System.Collections;
+//using System.Collections;
+//using System.Collections.Generic;
+//using UnityEngine;
+
+//public class GravityController : MonoBehaviour
+//{
+//    Vector3 selectedGravity = Vector3.down;
+//    bool isGravityChangeMode = false;
+
+//    public float gravityStrength = 9.81f;
+//    private Vector3 gravityDirection = Vector3.down;
+
+//    public GameObject hologramPrefab;
+//    private GameObject hologramInstance;
+
+//    public Rigidbody rb;
+
+//    public List<Transform> hologramPositions;
+
+//    private int positionIndex = 0;
+//    private int selectedPosition;
+
+//    public CharacterMovement playerMovement;
+//    void Start()
+//    {
+
+//        rb.useGravity = false;
+
+//        if (hologramPrefab)
+//        {
+//            hologramInstance = Instantiate(hologramPrefab, transform.position, Quaternion.identity);
+//            hologramInstance.SetActive(false);
+//        }
+
+//        //Physics.gravity = selectedGravity * gravityStrength;
+//    }
+
+//    // Update is called once per frame
+//    void Update()
+//    {
+//        isGravityChangeMode = Input.GetKey(KeyCode.LeftShift);
+
+//        if (hologramInstance)
+//            hologramInstance.SetActive(isGravityChangeMode);
+
+//        if (isGravityChangeMode)
+//            HandleGravitySelection();
+
+//        if (Input.GetKeyDown(KeyCode.Return) && isGravityChangeMode)
+//            ApplyGravity();
+//    }
+
+//    void FixedUpdate()
+//    {
+//        // Apply constant gravity
+//        rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
+//    }
+
+//    void HandleGravitySelection()
+//    {
+//        if (Input.GetKeyDown(KeyCode.RightArrow))
+//        {
+//            positionIndex = (positionIndex + 1) % hologramPositions.Count; // Cycle forward
+//            SelectGravity(hologramPositions[positionIndex].transform);
+//        }
+//        if (Input.GetKeyDown(KeyCode.LeftArrow))
+//        {
+//            positionIndex = (positionIndex - 1 + hologramPositions.Count) % hologramPositions.Count; // Cycle backward
+//            SelectGravity(hologramPositions[positionIndex].transform);
+//        }
+
+//    }
+
+//    void SelectGravity(Transform targetTransform)
+//    {
+//        selectedGravity = (targetTransform.position - transform.position).normalized;
+//        selectedPosition = positionIndex;
+
+//        if (hologramInstance)
+//        {
+//            hologramInstance.transform.position = targetTransform.position;
+//            hologramInstance.transform.rotation = targetTransform.rotation;
+//        }
+
+//        Debug.Log("Selected Gravity: " + selectedGravity); // Debugging
+
+//    }
+
+//    void ApplyGravity()
+//    {
+//        // Move the player to the hologram's position
+//        //transform.position = hologramInstance.transform.position;
+
+//        transform.position = hologramPositions[positionIndex].transform.position;
+//        transform.rotation = hologramPositions[positionIndex].transform.rotation;
+
+
+//        // Set the new gravity direction
+//        gravityDirection = selectedGravity;
+
+//        // Apply gravity to the Rigidbody manually
+//        rb.velocity = Vector3.zero; // Reset velocity to prevent unwanted movement
+//        rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
+
+//        // Apply gravity to the player movement script (if applicable)
+//        playerMovement.SetGravity(gravityDirection);
+
+//        Debug.Log("Applied Gravity: " + gravityDirection);
+//    }
+
+//    //void ApplyGravity()
+//    //{
+//    //    // Move the player to the hologram position
+//    //    transform.position = hologramPositions[positionIndex].position;
+
+//    //    // Rotate player to align with new gravity
+//    //    //Quaternion targetRotation = Quaternion.FromToRotation(transform.up, -selectedGravity) * transform.rotation;
+//    //    //transform.rotation = targetRotation;
+
+//    //    // Set new gravity direction
+//    //    gravityDirection = selectedGravity;
+
+//    //    // Reset velocity before applying gravity
+//    //    rb.velocity = Vector3.zero;
+
+//    //    Debug.Log("Applied Gravity: " + gravityDirection);
+//    //}
+
+//}
+
+
+
+
+
+
+
+
+
+
+//using System.Collections.Generic;
+//using UnityEngine;
+
+//public class GravityController : MonoBehaviour
+//{
+//    public float gravityStrength = 9.81f;
+//    private Vector3 gravityDirection = Vector3.down;
+//    private Vector3 selectedGravity = Vector3.down;
+
+//    public GameObject hologramPrefab;
+//    private GameObject hologramInstance;
+
+//    public Rigidbody rb;
+//    public CharacterMovement playerMovement;
+
+//    public List<Transform> hologramPositions;
+//    private int positionIndex = 0;
+
+//    private bool isGravityChangeMode = false;
+
+//    void Start()
+//    {
+//        if (rb == null)
+//        {
+//            Debug.LogError("Rigidbody missing on player object!");
+//            return;
+//        }
+
+//        rb.useGravity = false;  // Disable Unity's default gravity
+
+//        // Instantiate hologram but keep it hidden initially
+//        if (hologramPrefab)
+//        {
+//            hologramInstance = Instantiate(hologramPrefab, transform.position, Quaternion.identity);
+//            hologramInstance.SetActive(false);
+//        }
+//    }
+
+//    void Update()
+//    {
+//        isGravityChangeMode = Input.GetKey(KeyCode.LeftShift);
+
+//        if (hologramInstance)
+//            hologramInstance.SetActive(isGravityChangeMode);
+
+//        if (isGravityChangeMode)
+//            HandleGravitySelection();
+
+//        if (Input.GetKeyDown(KeyCode.Return) && isGravityChangeMode)
+//            ApplyGravity();
+//    }
+
+//    void FixedUpdate()
+//    {
+//        // Apply custom gravity force
+//        rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
+//    }
+
+//    void HandleGravitySelection()
+//    {
+//        if (Input.GetKeyDown(KeyCode.RightArrow))
+//        {
+//            positionIndex = (positionIndex + 1) % hologramPositions.Count; // Cycle forward
+//            UpdateHologram();
+//        }
+//        if (Input.GetKeyDown(KeyCode.LeftArrow))
+//        {
+//            positionIndex = (positionIndex - 1 + hologramPositions.Count) % hologramPositions.Count; // Cycle backward
+//            UpdateHologram();
+//        }
+//    }
+
+//    void UpdateHologram()
+//    {
+//        Transform targetTransform = hologramPositions[positionIndex];
+//        //selectedGravity = (targetTransform.position - transform.position).normalized;
+//        selectedGravity = -targetTransform.up;
+
+//        if (hologramInstance)
+//        {
+//            hologramInstance.transform.position = targetTransform.position;
+//            hologramInstance.transform.rotation = targetTransform.rotation;
+//        }
+
+//        Debug.Log("Selected Gravity: " + selectedGravity);
+//    }
+
+//    void ApplyGravity()
+//    {
+//        Transform targetTransform = hologramPositions[positionIndex];
+
+//        // Move player to hologram position and adjust rotation
+//        transform.position = targetTransform.position;
+//        transform.rotation = targetTransform.rotation;
+
+//        // Apply new gravity direction
+//        gravityDirection = selectedGravity;
+//        rb.velocity = Vector3.zero; // Reset velocity to prevent unwanted motion
+//        rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
+
+//        // Update gravity in movement script if applicable
+//        playerMovement.SetGravity(gravityDirection);
+
+//        Debug.Log("Applied Gravity: " + gravityDirection);
+//    }
+//}
+
+
+
+
+
+
+
 using System.Collections.Generic;
 using UnityEngine;
 
 public class GravityController : MonoBehaviour
 {
-    Vector3 selectedGravity = Vector3.down;
-    bool isGravityChangeMode = false;
-
     public float gravityStrength = 9.81f;
     private Vector3 gravityDirection = Vector3.down;
+    private Vector3 selectedGravity = Vector3.down;
 
     public GameObject hologramPrefab;
     private GameObject hologramInstance;
 
     public Rigidbody rb;
+    public CharacterMovement playerMovement;
 
     public List<Transform> hologramPositions;
-
     private int positionIndex = 0;
 
-    //public GameObject player;
+    private bool isGravityChangeMode = false;
 
-    // Start is called before the first frame update
     void Start()
     {
+        if (rb == null)
+        {
+            Debug.LogError("Rigidbody missing on player object!");
+            return;
+        }
 
-        //rb.useGravity = false;
+        rb.useGravity = false;  // Disable Unity's default gravity
 
+        // Instantiate hologram but keep it hidden initially
         if (hologramPrefab)
         {
             hologramInstance = Instantiate(hologramPrefab, transform.position, Quaternion.identity);
             hologramInstance.SetActive(false);
         }
-
-        Physics.gravity = selectedGravity * gravityStrength;
     }
 
-    // Update is called once per frame
     void Update()
     {
-        // Activate gravity selection mode when Left Shift is held
         isGravityChangeMode = Input.GetKey(KeyCode.LeftShift);
 
         if (hologramInstance)
@@ -52,168 +302,58 @@ public class GravityController : MonoBehaviour
             ApplyGravity();
     }
 
-    //void FixedUpdate()
-    //{
-    //    rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
-    //}
-
-    //void HandleGravitySelection()
-    //{
-    //    if (Input.GetKeyDown(KeyCode.UpArrow))
-    //        SelectGravity(Vector3.up);
-    //    if (Input.GetKeyDown(KeyCode.RightArrow))
-    //        SelectGravity(Vector3.right);
-    //    if (Input.GetKeyDown(KeyCode.LeftArrow))
-    //        SelectGravity(Vector3.left);
-    //    if (Input.GetKeyDown(KeyCode.DownArrow))
-    //        SelectGravity(Vector3.down);
-    //}
+    void FixedUpdate()
+    {
+        // Apply custom gravity force
+        rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
+    }
 
     void HandleGravitySelection()
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            positionIndex = (positionIndex + 1) % 5; // Cycle forward
-            SelectGravity(hologramPositions[positionIndex].transform);
+            positionIndex = (positionIndex + 1) % hologramPositions.Count; // Cycle forward
+            UpdateHologram();
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            positionIndex = (positionIndex - 1 + 5) % 5; // Cycle backward
-            SelectGravity(hologramPositions[positionIndex].transform);
+            positionIndex = (positionIndex - 1 + hologramPositions.Count) % hologramPositions.Count; // Cycle backward
+            UpdateHologram();
         }
     }
 
-
-    void SelectGravity(Transform transform)
+    void UpdateHologram()
     {
-        selectedGravity = (transform.position).normalized;
+        Transform targetTransform = hologramPositions[positionIndex];
+
+        // Get the "down" direction from the target's transform
+        selectedGravity = -targetTransform.up;
 
         if (hologramInstance)
         {
-            hologramInstance.transform.position = transform.position;
-            hologramInstance.transform.rotation = transform.rotation;
-            //hologramInstance.transform.rotation = Quaternion.LookRotation(-selectedGravity);
+            hologramInstance.transform.position = targetTransform.position;
+            hologramInstance.transform.rotation = targetTransform.rotation;
         }
-    }
 
-    //void SelectGravity(Vector3 direction)
-    //{
-    //    selectedGravity = direction;
-
-    //    if (hologramInstance)
-    //    {
-    //        hologramInstance.transform.position = transform.position + direction * 1.5f; // Offset in selected direction
-    //        hologramInstance.transform.rotation = Quaternion.LookRotation(-selectedGravity); // Face the player
-    //    }
-    //}
-    //void ApplyGravity()
-    //{
-    //    Debug.Log("Gravity applied to" + selectedGravity);
-    //}
-
-    void RotatePlayer(Vector3 direction)
-    {
-        // Determine the new rotation based on gravity direction
-        Quaternion newRotation = Quaternion.LookRotation(Vector3.forward, -direction);
-        transform.rotation = newRotation;
+        Debug.Log("Selected Gravity: " + selectedGravity);
     }
 
     void ApplyGravity()
     {
-        RotatePlayer(selectedGravity);
-        Physics.gravity = selectedGravity * gravityStrength;
+        Transform targetTransform = hologramPositions[positionIndex];
 
+        // Move player to hologram position and adjust rotation
+        transform.position = targetTransform.position;
+        transform.rotation = targetTransform.rotation;
 
+        // Apply new gravity direction
+        gravityDirection = selectedGravity;
+        rb.velocity = Vector3.zero; // Reset velocity to prevent unwanted motion
+        rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
 
-        if (hologramInstance)
-            hologramInstance.SetActive(false); // Hide after applying gravity
+        // Update gravity in movement script if applicable
+        playerMovement.SetGravity(gravityDirection);
+
+        Debug.Log("Applied Gravity: " + gravityDirection);
     }
 }
-
-//using UnityEngine;
-
-//public class GravityController : MonoBehaviour
-//{
-//    public Rigidbody playerRigidbody;
-//    public float rotationSpeed = 5f;
-//    private Vector3 currentGravity = Vector3.down;
-
-//    void Start()
-//    {
-//        if (playerRigidbody == null)
-//            playerRigidbody = GetComponent<Rigidbody>();
-
-//        Physics.gravity = currentGravity;
-//    }
-
-//    void Update()
-//    {
-//        HandleInput();
-//        AlignToSurface();
-//    }
-
-//    void HandleInput()
-//    {
-//        if (Input.GetKeyDown(KeyCode.G)) // Change to downward gravity
-//        {
-//            SelectGravity(Vector3.down);
-//            GetComponent<CharacterMovement>().SetGravity(Vector3.down);
-//        }
-//        if (Input.GetKeyDown(KeyCode.F)) // Change to upward gravity
-//        {
-//            ChangeGravity(Vector3.up);
-//            GetComponent<CharacterMovement>().SetGravity(Vector3.up);
-//        }
-//        if (Input.GetKeyDown(KeyCode.L)) // Change to leftward gravity
-//        {
-//            ChangeGravity(Vector3.left);
-//            GetComponent<CharacterMovement>().SetGravity(Vector3.left);
-//        }
-//        if (Input.GetKeyDown(KeyCode.R)) // Change to rightward gravity
-//        {
-//            ChangeGravity(Vector3.right);
-//            GetComponent<CharacterMovement>().SetGravity(Vector3.right);
-//        }
-//    }
-
-//    public void ChangeGravity(Vector3 newGravity)
-//    {
-//        currentGravity = newGravity;
-//        Physics.gravity = newGravity;
-//        RotatePlayer(newGravity);
-//    }
-
-//    void RotatePlayer(Vector3 gravityDirection)
-//    {
-//        Quaternion targetRotation = Quaternion.LookRotation(Vector3.Cross(transform.right, -gravityDirection), -gravityDirection);
-//        StartCoroutine(SmoothRotation(targetRotation));
-//    }
-
-//    System.Collections.IEnumerator SmoothRotation(Quaternion targetRotation)
-//    {
-//        while (Quaternion.Angle(transform.rotation, targetRotation) > 0.1f)
-//        {
-//            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * rotationSpeed);
-//            yield return null;
-//        }
-//    }
-
-//    void AlignToSurface()
-//    {
-//        RaycastHit hit;
-//        if (Physics.Raycast(transform.position, -transform.up, out hit, 2f))
-//        {
-//            Quaternion surfaceRotation = Quaternion.FromToRotation(transform.up, hit.normal) * transform.rotation;
-//            transform.rotation = Quaternion.Slerp(transform.rotation, surfaceRotation, Time.deltaTime * rotationSpeed);
-//        }
-//    }
-
-//    private void OnTriggerEnter(Collider other)
-//    {
-//        if (other.CompareTag("GravityZone"))
-//        {
-//            Vector3 newGravity = other.transform.up; // Adjust based on zone's direction
-//            ChangeGravity(newGravity);
-//        }
-//    }
-//}
