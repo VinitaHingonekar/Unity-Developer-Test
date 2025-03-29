@@ -4,23 +4,12 @@ using UnityEngine;
 
 public class CubeManager : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     private void OnTriggerEnter(Collider other)
     {
         if (other.CompareTag("Player"))
         {
-            Debug.Log("Cube Collected!");
+            //Debug.Log("Cube Collected!");
+            FindObjectOfType<GameManager>().CollectCube();
             Destroy(gameObject);
         }
     }
