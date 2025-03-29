@@ -19,6 +19,7 @@ public class GameManager : MonoBehaviour
     public GameObject endScreen;
     public TextMeshProUGUI resultText;
     public TextMeshProUGUI timerText;
+    public TextMeshProUGUI cubesText;
 
     [Header("Timer")]
     public float timeLimit = 120f; // 2 minutes
@@ -28,7 +29,8 @@ public class GameManager : MonoBehaviour
     void Start()
     {
         timeRemaining = timeLimit;
-        gameScreen.SetActive(true);
+        if (gameScreen)
+            gameScreen.SetActive(true);
         if (endScreen)
             endScreen.SetActive(false);
     }
@@ -62,13 +64,19 @@ public class GameManager : MonoBehaviour
     public void CollectCube()
     {
         collectedCubes++;
-        Debug.Log("Cubes Collected: " + collectedCubes);
+        UpdateCubesUI();
+        //Debug.Log("Cubes Collected: " + collectedCubes);
 
         if (collectedCubes >= totalCubes)
         {
             hasWon = true;
             ShowEndScreen();
         }
+    }
+
+    void UpdateCubesUI()
+    {
+        cubesText.text = "Cubes : " + collectedCubes + "/5";
     }
 
     public void PlayerDeath()
@@ -87,14 +95,14 @@ public class GameManager : MonoBehaviour
 
         if (hasWon)
         {
-            resultText.text = "Congratulations! You Win!";
+            resultText.text = "Congratulations!\nYou Win!";
         }
         else
         {
             if (timeOut)
-                resultText.text = "Time Out!     You Lost!";
+                resultText.text = "Time Out!\nYou Lost!";
             else
-                resultText.text = "Game Over!    You Lost!";
+                resultText.text = "Game Over!\nYou Lost!";
         }
     }
 

@@ -85,6 +85,6 @@ public class CharacterMovement : MonoBehaviour
         rb.velocity = Vector3.zero;
 
         // rotating the player according to new gravity
-        transform.rotation = Quaternion.FromToRotation(Vector3.up, -gravityDirection);
+        //transform.rotation = Quaternion.FromToRotation(Vector3.up, -gravityDirection);
     }
 }
