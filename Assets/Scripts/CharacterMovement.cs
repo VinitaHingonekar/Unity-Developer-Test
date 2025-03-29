@@ -43,21 +43,20 @@ public class CharacterMovement : MonoBehaviour
     void HandleMovement()
     {
         bool shiftHeld = Input.GetKey(KeyCode.LeftShift);
-        if (shiftHeld) return; // Prevent movement when selecting gravity
+        if (shiftHeld) return; // preventing the player from moving when selecting gravity
 
-        float moveX = Input.GetAxis("Horizontal"); // A/D or Left/Right
-        float moveZ = Input.GetAxis("Vertical");   // W/S or Up/Down
+        float moveX = Input.GetAxis("Horizontal");
+        float moveZ = Input.GetAxis("Vertical");
 
-        // Dynamically calculate movement directions relative to gravity
+        // calculating the movement directions relative to current gravity
         Vector3 rightDirection = Vector3.Cross(-gravityDirection, Camera.main.transform.forward).normalized;
         Vector3 forwardDirection = Vector3.Cross(rightDirection, -gravityDirection).normalized;
 
-        // Movement based on new gravity alignment
+        // movement direction according to current gravity
         Vector3 moveDirection = (moveX * rightDirection + moveZ * forwardDirection).normalized;
 
-        // Apply movement with velocity
         Vector3 velocity = moveDirection * moveSpeed;
-        velocity += Vector3.Project(rb.velocity, gravityDirection); // Preserve gravity effect
+        velocity += Vector3.Project(rb.velocity, gravityDirection);
         rb.velocity = velocity;
 
         animator.SetFloat("Speed", moveDirection.magnitude);
@@ -66,7 +65,7 @@ public class CharacterMovement : MonoBehaviour
 
     void Jump()
     {
-        rb.velocity += -gravityDirection * jumpForce; // Jump against gravity direction
+        rb.velocity += -gravityDirection * jumpForce; // jumping against the current gravity direction
     }
 
     void ApplyGravity()
@@ -83,9 +82,9 @@ public class CharacterMovement : MonoBehaviour
     public void SetGravity(Vector3 newGravity)
     {
         gravityDirection = newGravity.normalized;
-        rb.velocity = Vector3.zero; // Reset velocity when gravity changes
+        rb.velocity = Vector3.zero;
 
-        // Rotate player to align with new gravity
+        // rotating the player according to new gravity
         transform.rotation = Quaternion.FromToRotation(Vector3.up, -gravityDirection);
     }
 }

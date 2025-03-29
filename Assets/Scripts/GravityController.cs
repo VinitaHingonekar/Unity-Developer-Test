@@ -29,9 +29,9 @@ public class GravityController : MonoBehaviour
             return;
         }
 
-        rb.useGravity = false;  // Disable Unity's default gravity
+        rb.useGravity = false; // disablin unity's gravity
 
-        // Instantiate hologram but keep it hidden initially
+        // instantiating hologram but keep it setting it inactive at the start
         if (hologramPrefab)
         {
             hologramInstance = Instantiate(hologramPrefab, transform.position, Quaternion.identity);
@@ -41,10 +41,21 @@ public class GravityController : MonoBehaviour
 
     void Update()
     {
+        //only take arrow keys inpput when shift is pressed
         isGravityChangeMode = Input.GetKey(KeyCode.LeftShift);
 
         if (hologramInstance)
-            hologramInstance.SetActive(isGravityChangeMode);
+        {
+            if (isGravityChangeMode)
+            {
+                hologramInstance.SetActive(true);
+                UpdateHologram(); // so that hologram updates immediately when shift is pressed
+            }
+            else
+            {
+                hologramInstance.SetActive(false);
+            }
+        }
 
         if (isGravityChangeMode)
             HandleGravitySelection();
@@ -55,7 +66,7 @@ public class GravityController : MonoBehaviour
 
     void FixedUpdate()
     {
-        // Apply custom gravity force
+        // applying custom force to the player
         rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
     }
 
@@ -63,12 +74,12 @@ public class GravityController : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.RightArrow))
         {
-            positionIndex = (positionIndex + 1) % hologramPositions.Count; // Cycle forward
+            positionIndex = (positionIndex + 1) % hologramPositions.Count; // cycle through the directions (forward)
             UpdateHologram();
         }
         if (Input.GetKeyDown(KeyCode.LeftArrow))
         {
-            positionIndex = (positionIndex - 1 + hologramPositions.Count) % hologramPositions.Count; // Cycle backward
+            positionIndex = (positionIndex - 1 + hologramPositions.Count) % hologramPositions.Count; // cycle through the directions (backward)
             UpdateHologram();
         }
     }
@@ -77,7 +88,7 @@ public class GravityController : MonoBehaviour
     {
         Transform targetTransform = hologramPositions[positionIndex];
 
-        // Get the "down" direction from the target's transform
+        // getting the down direction of the hologram
         selectedGravity = -targetTransform.up;
 
         if (hologramInstance)
@@ -85,26 +96,26 @@ public class GravityController : MonoBehaviour
             hologramInstance.transform.position = targetTransform.position;
             hologramInstance.transform.rotation = targetTransform.rotation;
         }
-
-        Debug.Log("Selected Gravity: " + selectedGravity);
+        //Debug.Log("Selected Gravity: " + selectedGravity);
     }
 
     void ApplyGravity()
     {
         Transform targetTransform = hologramPositions[positionIndex];
 
-        // Move player to hologram position and adjust rotation
+        // moving player to holograms position and rotation
         transform.position = targetTransform.position;
         transform.rotation = targetTransform.rotation;
 
-        // Apply new gravity direction
+        // applying new gravity direction
         gravityDirection = selectedGravity;
-        rb.velocity = Vector3.zero; // Reset velocity to prevent unwanted motion
+
+        rb.velocity = Vector3.zero; 
         rb.AddForce(gravityDirection * gravityStrength, ForceMode.Acceleration);
 
-        // Update gravity in movement script if applicable
+        // updateing gravity direction in movement script
         playerMovement.SetGravity(gravityDirection);
 
-        Debug.Log("Applied Gravity: " + gravityDirection);
+        //Debug.Log("Applied Gravity: " + gravityDirection);
     }
 }
